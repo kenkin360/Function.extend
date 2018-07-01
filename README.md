@@ -1,15 +1,15 @@
-# Function.extend
+# Function.extend.js
 ---
 This is the code of my question on stackoverflow.com: 
 
 * https://stackoverflow.com/questions/21126505/how-to-implement-c-sharp-access-modifiers-in-javascript
 
-I was looking for a better solution to enable the feasibility of writing javascript like is was a class-based language but there's not yet an solution that satisfies the simplicity and the features requested thus I suppose the code itself as a currently feasible solution. 
+I was looking for a better solution to enable the feasibility of writing javascript like it was a class-based language but there's not yet a solution that satisfies the simplicity and the features requested thus I suppose the code itself is a currently feasible solution. 
 
 # Requirements
 ---
 1. Every class must have a constructor. 
-2. A constructor should have the same name as its class name. 
+2. A constructor must have the same name as its class name. 
 3. Every constructor must call its base constructor. 
 4. Member names must not duplicate, even if they were in different access
 5. _ must be declared in each class declaration and initialized with this(ConstructorName)
