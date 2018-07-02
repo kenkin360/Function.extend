@@ -31,7 +31,7 @@ Normally if you broke the requirements or do something wrong of a class-base lan
 Things I tried like accessing a undeclared member, accessing public members with _, etc., it will throw as excepted. 
 
 # Special Notes
-If you want to declare a static class, extend your class with Function, then it will throw when the consuming code trying to instantiate it. 
+If you want to declare a static class, extend your class from Function, then it will throw when the consuming code trying to instantiate it. 
 
 
 # Getting Started
