@@ -36,7 +36,7 @@ If you want to declare a static class, extend your class from Function, then it 
 
 # Getting Started
 ---
-The follow is a comprehensive example including nested and derived class declaration: 
+The following is a comprehensive example including nested and derived class declaration: 
 
 	'use strict';
 
