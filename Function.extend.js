@@ -49,12 +49,12 @@ Function.extend=function(base, factory) {
 				recent=value;
 			}
 
+			transfer(value, this);
 			return value;
 		};
 
 		base.apply(this, arguments);
 		$this['']=this[''];
-		bind.call(this);
 	}
 
 	function initializeClass(derived) {
@@ -81,17 +81,5 @@ Function.extend=function(base, factory) {
 
 		derived.prototype=y['public'];
 		return y;
-	}
-
-	function bind() {
-		var $private=y(this);
-
-		for(var key in $private) {
-			var member=$private[key];
-
-			if(member instanceof Function) {
-				$private[key]=member.bind(this);
-			}
-		}
 	}
 };
