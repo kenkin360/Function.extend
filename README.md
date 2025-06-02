@@ -5,27 +5,6 @@ This is the code of my question on stackoverflow.com:
 
 I was looking for a better way to write JavaScript as if it were a class-based language. Since no existing solution meets both the desired simplicity and feature set, I believe this code currently offers a feasible alternative.
 
-# Requirements
-
-1. **Each class must have a constructor.**  
-   *(Related — C# Language Specification, §10.11.4)*  
-   In Function.extend.js, the constructor must be explicitly declared using the `function` keyword.
-
-2. **The constructor declaration name shall match the name of the class.**  
-   *(Related — C# Language Specification, §10.11.2)*
-
-3. **Each constructor must invoke its base constructor.**  
-   *(Related — C# Language Specification, §10.11.4)*  
-   In Function.extend.js, this is typically done via `_['base'].apply(this, arguments)`, or using `.call(...)` for custom arguments.
-
-4. **A class member declaration shall not have the same name as another member declared in the same access level.**  
-   *(Related — C# Language Specification, §10.6.3)*  
-   In Function.extend.js, an overridden member replaces the inherited one in the current class context and cannot be accessed once redefined.
-
-5. **A variable named `_` must be declared and initialized as `this(ConstructorName)` at the beginning of the class body.**
-
-These requirements are generally consistent with class-based object-oriented languages, except for rule 5, which is specific to the Function.extend model.
-
 # Getting Started
 The following is a comprehensive example including nested and derived class declaration:
 
@@ -102,6 +81,27 @@ The following is a comprehensive example including nested and derived class decl
 	alert(o.GetX());
 	alert(o.GetY());
 	alert(o.GetZ());
+
+# Requirements
+
+1. **Each class must have a constructor.**  
+   *(Related — C# Language Specification, §10.11.4)*  
+   In Function.extend.js, the constructor must be explicitly declared using the `function` keyword.
+
+2. **The constructor declaration name shall match the name of the class.**  
+   *(Related — C# Language Specification, §10.11.2)*
+
+3. **Each constructor must invoke its base constructor.**  
+   *(Related — C# Language Specification, §10.11.4)*  
+   In Function.extend.js, this is typically done via `_['base'].apply(this, arguments)`, or using `.call(...)` for custom arguments.
+
+4. **A class member declaration shall not have the same name as another member declared in the same access level.**  
+   *(Related — C# Language Specification, §10.6.3)*  
+   In Function.extend.js, an overridden member replaces the inherited one in the current class context and cannot be accessed once redefined.
+
+5. **A variable named `_` must be declared and initialized as `this(ConstructorName)` at the beginning of the class body.**
+
+These requirements are generally consistent with class-based object-oriented languages, except for rule 5, which is specific to the Function.extend model.
 
 # Limitations
 
