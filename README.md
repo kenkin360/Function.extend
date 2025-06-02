@@ -6,27 +6,25 @@ This is the code of my question on stackoverflow.com:
 I was looking for a better way to write JavaScript as if it were a class-based language. Since no existing solution meets both the desired simplicity and feature set, I believe this code currently offers a feasible alternative.
 
 # Requirements
-1. Every class must have a constructor.
-2. A constructor must have the same name as its class name.
-3. Every constructor must call its base constructor. (Prefer `_['base'].apply(this, arguments);`)
-4. Member names must not duplicate, even if they are in different access levels.
-5. `_` must be declared in each class declaration and initialized with `this(ConstructorName)`.
 
-These are generally the same requirements as a real class-based language, except for rule 5.
+1. **Each class must have a constructor.**  
+   *(Related — C# Language Specification, §10.11.4)*  
+   In Function.extend.js, the constructor must be explicitly declared using the `function` keyword.
 
-# Limitations
-1. There's no method overloading. This also means constructor overloading is not supported.
-2. There's no support for `protected static` or `private static` members; for `public static` members, you can define them directly on the class using its name.
-3. `_` can only be used to access private or protected members; for public members, you should access them directly on the instance, as is typical in JavaScript.
+2. **The constructor declaration name shall match the name of the class.**  
+   *(Related — C# Language Specification, §10.11.2)*
 
-These are mostly the limitations of JavaScript itself, except for rule 3.
+3. **Each constructor must invoke its base constructor.**  
+   *(Related — C# Language Specification, §10.11.4)*  
+   In Function.extend.js, this is typically done via `_['base'].apply(this, arguments)`, or using `.call(...)` for custom arguments.
 
-# Reliability
-Normally, if you violate the rules or misuse features of a class-based language, the compiler will report an error. But since JavaScript is an interpreted language, the interpreter will throw a runtime error — typically in the browser, unless the debugger is silenced.
+4. **A class member declaration shall not have the same name as another member declared in the same access level.**  
+   *(Related — C# Language Specification, §10.6.3)*  
+   In Function.extend.js, an overridden member replaces the inherited one in the current class context and cannot be accessed once redefined.
 
-Things I tried, like accessing undeclared members or using `_` to access public members, will throw errors as expected.
+5. **A variable named `_` must be declared and initialized as `this(ConstructorName)` at the beginning of the class body.**
 
-If you want to declare a static class, extend your class from Function. Attempting to instantiate it in consuming code will also throw an error.
+These requirements are generally consistent with class-based object-oriented languages, except for rule 5, which is specific to the Function.extend model.
 
 # Getting Started
 The following is a comprehensive example including nested and derived class declaration:
@@ -104,3 +102,26 @@ The following is a comprehensive example including nested and derived class decl
 	alert(o.GetX());
 	alert(o.GetY());
 	alert(o.GetZ());
+
+# Limitations
+
+1. Method overloading is unsupported, including constructor overloading.
+
+2. The only access modifiers are `_['public']`, `_['protected']`, and `_['private']`. Public static members should be defined directly on the class object. `protected static` and `private static` are not supported.
+
+3. Abstract classes may be emulated by throwing an error in the constructor.
+
+4. Interfaces are not supported. JavaScript offers no semantic or structural basis for them. Should such a feature ever exist, it would likely be named `Function.implement`.
+
+These are mostly limitations of JavaScript itself.
+
+# Conventions
+
+1. Members should be accessed using `_(this).memberName`, while `this.memberName` also works for public members. 
+
+2. To declare a static class, inherit from `Function`. Instantiation is naturally blocked -- as it should be.
+
+# Reliability
+
+Function.extend.js embraces the philosophy of fail-fast.  
+Like when you violate the rules or misuse features of a class-based language and the compiler reports an error -- runtime errors will be triggered in such cases under JavaScript, typically in the browser console -- unless the debugger is silenced, as it is an interpreted language.
