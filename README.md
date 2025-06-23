@@ -134,7 +134,7 @@ _['public'].OnMouseWheel = function (e) {
 
 2. To declare a static class, inherit from `Function`. Instantiation is naturally blocked -- as it should be. 
 
-3. Custom annotations like `@@override` may be used to indicate intent. They are not interpreted or executed in any way, but serve as a convention to clarify the purpose of certain declarations. Examples can be found in the `examples` folder.
+3. Custom annotations like `@@override` may be used to indicate intent. They are not interpreted or executed in any way, but serve as a convention to clarify the purpose of certain declarations. Examples can be found [HERE](https://github.com/kenkin360/Function.extend/tree/master/examples). 
 
 # Reliability
 
