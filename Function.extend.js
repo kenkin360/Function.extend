@@ -57,7 +57,8 @@ Function.extend=function(base, factory) {
 		$this['']=this[''];
 	}
 
-	function initializeClass(derived) {
+	function initializeClass(extended) {
+		var derived=extended;
 		y['public']=Object.create(base.prototype);
 		y['public'].constructor=derived;
 
