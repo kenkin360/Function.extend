@@ -96,23 +96,21 @@ Function.extend=function(base, factory) {
 	}
 
 	function createClass(extended) {
-		return (new Function('extended', 'base', 'initializeInstance', '\
-return class extends base {\
-	constructor(...args) {\
-		super(...args);\
-		initializeInstance.apply(this, args);\
-		extended.apply(this, args);\
-	}\
-}'))(extended, base, initializeInstance);
+		return class extends base {
+			constructor(...args) {
+				super(...args);
+				initializeInstance.apply(this, args);
+				extended.apply(this, args);
+			}
+		};
 	}
-	
+
 	function createConstructor(extended) {
-		return (new Function('extended', 'base', 'initializeInstance', '\
-return function() {\
-	base.apply(this, arguments);\
-	initializeInstance.apply(this, arguments);\
-	extended.apply(this, arguments);\
-}'))(extended, base, initializeInstance);
+		return function() {
+			base.apply(this, arguments);
+			initializeInstance.apply(this, arguments);
+			extended.apply(this, arguments);
+		};
 	}
 	
 	function use(what) {
