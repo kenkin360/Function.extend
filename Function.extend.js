@@ -1,5 +1,5 @@
 Function.extend=function(base, factory) {
-	factory.call(initializeClass);
+	use(factory).call(initializeClass);
 	updateStaticMembersOfDerivedInnerClasses(y['public'].constructor);
 	transfer(y['protected'], y['public']);
 	return y['public'].constructor;
@@ -58,7 +58,7 @@ Function.extend=function(base, factory) {
 	}
 
 	function initializeClass(extended) {
-		var derived=es6() in use?createClass(extended):createConstructor(extended);
+		var derived=es6() in use?createClass(use(extended)):createConstructor(use(extended));
 		y['public']=es6() in use?derived.prototype:Object.create(base.prototype);
 		y['public'].constructor=derived;
 
@@ -115,14 +115,30 @@ return function() {\
 }'))(extended, base, initializeInstance);
 	}
 	
-	function use() {
+	function use(what) {
+		if(factory!==what) {
+			return (y['.constructor']=what);
+		}
+
+		return function() {
+			factory.call(this);
+			transfer(y['public'].constructor, y['.constructor']);
+		};
 	}
 
 	function es6() {
-		var t='es6' in use;
-		var u=Object===base;
-		var v='function'===typeof base;
-		var w=Object.getOwnPropertyDescriptor;		
-		return (!t&&(u||v&&w(base,'prototype')['writable']))?'es5':(use['es6']='es6');
+		if('es6' in use) {
+			return 'es6';
+		}
+		
+		if('function'===typeof base){
+			var f=Object.getOwnPropertyDescriptor;
+
+			if((Object===base)||(f(base, 'prototype')['writable'])){
+				return 'es5';
+			}
+
+			return (use['es6']='es6');
+		}
 	}
 };
