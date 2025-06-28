@@ -13,7 +13,7 @@ The following is a comprehensive example including nested and derived class decl
 var BaseClass=Function.extend(Object, function () {
 	var _=this(BaseClass);
 
-	var NestedClass=Function.extend(BaseClass, function () {
+	var NestedClass=Function.extend(_[BaseClass], function () {
 		var _=this(NestedClass);
 
 		function NestedClass(x, y, z) {
@@ -73,33 +73,34 @@ var DerivedClass=Function.extend(BaseClass, function () {
 });
 
 var o=DerivedClass.Sample;
-alert(o.GetX());
-alert(o.GetY());
-alert(o.GetZ());
+
+console.log('o →', o);
+console.log('o.GetX() →', o.GetX());
+console.log('o.GetY() →', o.GetY());
+console.log('o.GetZ() →', o.GetZ());
 o.SetX(3);
 o.SetZ(1);
-alert(o.GetX());
-alert(o.GetY());
-alert(o.GetZ());
+console.log('o.GetX() →', o.GetX());
+console.log('o.GetY() →', o.GetY());
+console.log('o.GetZ() →', o.GetZ());
 ```
 # Requirements
 
-1. **Each class must have a constructor.**  
-   *(Related — C# Language Specification, §10.11.4)*  
+1. **Each class must have a constructor declaration that matches the name of the class.**  
+   *(Related — C# Language Specification, §10.11.2, §10.11.4)*
    In Function.extend.js, the constructor must be explicitly declared using the `function` keyword.
 
-2. **The constructor declaration name shall match the name of the class.**  
-   *(Related — C# Language Specification, §10.11.2)*
-
-3. **Each constructor must invoke its base constructor.**  
+2. **Each constructor must invoke its base constructor.**  
    *(Related — C# Language Specification, §10.11.4)*  
    In Function.extend.js, this is typically done via `_['base'].apply(this, arguments)`, or using `.call(...)` for custom arguments.
 
-4. **Class member methods must be declared using `function () {}` syntax rather than arrow functions.**  
+3. **Class member methods must be declared using `function () {}` syntax rather than arrow functions.**  
    Arrow functions capture the surrounding lexical `this` and cannot access the `_` context correctly.  
    This will break access to `private` and `protected` scopes, and may lead to unexpected behavior.
 
-5. **A variable named `_` must be declared and initialized as `this(ConstructorName)` at the beginning of the class body.**
+4. **A variable named `_` must be declared and initialized as `this(ConstructorName)` at the beginning of the class body.**
+
+5. **Wrap the base class constructor in _[XXXXX] when declaring a nested class to ensure correct inheritance.**
 
 # Limitations
 
