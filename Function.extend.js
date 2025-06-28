@@ -58,7 +58,7 @@ Function.extend=function(base, factory) {
 	}
 
 	function initializeClass(extended) {
-		var derived=es6() in use?createClass(use(extended)):createConstructor(use(extended));
+		var derived=y[extended]=(es6() in use?createClass(use(extended)):createConstructor(use(extended)));
 		y['public']=es6() in use?derived.prototype:Object.create(base.prototype);
 		y['public'].constructor=derived;
 

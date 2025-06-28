@@ -58,7 +58,7 @@ Function.extend=function(base, factory) {
 	}
 
 	function initializeClass(extended) {
-		var derived=extended;
+		var derived=y[extended]=extended;
 		y['public']=Object.create(base.prototype);
 		y['public'].constructor=derived;
 
