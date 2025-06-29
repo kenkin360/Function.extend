@@ -1,3 +1,4 @@
+
 Function.extend=function(base, $factory) {
 	factory.call(initializeClass);
 	updateStaticMembersOfDerivedInnerClasses(y['public'].constructor);
