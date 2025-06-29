@@ -1,5 +1,5 @@
-Function.extend=function(base, factory) {
-	use(factory).call(initializeClass);
+Function.extend=function(base, $factory) {
+	factory.call(initializeClass);
 	updateStaticMembersOfDerivedInnerClasses(y['public'].constructor);
 	transfer(y['protected'], y['public']);
 	return y['public'].constructor;
@@ -37,7 +37,7 @@ Function.extend=function(base, factory) {
 	}
 
 	function initializeInstance() {
-		var $this=es6() in use?createProxy(this):Object.create(y['private']);
+		var $this=useES6()?createProxy(this):Object.create(y['private']);
 		var derivedGet=this[''];
 		var recent=$this;
 
@@ -53,13 +53,13 @@ Function.extend=function(base, factory) {
 			return value;
 		};
 
-		es6() in use?void(0):base.apply(this, arguments);
+		//base.apply(this, arguments);
 		$this['']=this[''];
 	}
 
 	function initializeClass(extended) {
-		var derived=y[extended]=(es6() in use?createClass(use(extended)):createConstructor(use(extended)));
-		y['public']=es6() in use?derived.prototype:Object.create(base.prototype);
+		var derived=y[extended]=createConstructor(extended);
+		y['public']=useES6()?derived.prototype:Object.create(base.prototype);
 		y['public'].constructor=derived;
 
 		if(Object.prototype.hasOwnProperty.call(base, 'transmit')) {
@@ -70,7 +70,7 @@ Function.extend=function(base, factory) {
 		}
 
 		y['private']=Object.create(y['protected']);
-		y['base']=es6() in use?(function() {}):initializeInstance;
+		y['base']=$base;
 		transfer(derived, base);
 
 		derived.transmit=function(x) {
@@ -84,6 +84,54 @@ Function.extend=function(base, factory) {
 		return y;
 	}
 
+	function createConstructor(extended) {
+		y['.constructor']=extended;
+		
+		if(useES6()) {
+			return createClass(extended);
+		}
+
+		if(!Function.extend['.useRegular']) {
+			return createLegacyConstructor(extended);
+		}		
+		
+		return function() {
+			var $this=Object.create(y['private']);
+			extended.apply($this, arguments);
+			var args=$this['.arguments'];
+			base.apply(this, arguments);
+			initializeInstance.apply(this, arguments);
+			
+			if('function'===typeof $this['.after']) {
+				$this['.after'].apply(this, arguments);
+			}
+		};
+	}
+
+	function createClass(extended) {
+		return class extends base {
+			constructor(...params) {
+				var $this=Object.create(y['private']);
+				extended.apply($this, ...params);
+				var args=$this['.arguments'];
+				super(...args);
+				initializeInstance.apply(this, args);
+
+				if('function'===typeof $this['.after']) {
+					$this['.after'].apply(this, arguments);
+				}
+			}
+		};
+	}
+
+	function createLegacyConstructor(extended) {
+		return function() {
+			base.apply(this, arguments);
+			initializeInstance.apply(this, arguments);
+			extended.apply(this, arguments);
+		};
+	}
+	
 	function createProxy(instance) {		
 		return new Proxy(Object.create(y['private']), { get: function (target, key) {
 			try {
@@ -94,49 +142,36 @@ Function.extend=function(base, factory) {
 			}
 		}});		
 	}
+	
+	function $base() {
+		var $this=this;
+		$this['.arguments']=arguments;
 
-	function createClass(extended) {
-		return class extends base {
-			constructor(...args) {
-				super(...args);
-				initializeInstance.apply(this, args);
-				extended.apply(this, args);
-			}
+		return function(after) {
+			$this['.after']=after;
 		};
 	}
 
-	function createConstructor(extended) {
-		return function() {
-			base.apply(this, arguments);
-			initializeInstance.apply(this, arguments);
-			extended.apply(this, arguments);
-		};
+	function factory() {
+		$factory.call(initializeClass);
+		transfer(y['public'].constructor, y['.constructor']);		
 	}
 	
-	function use(what) {
-		if(factory!==what) {
-			return (y['.constructor']=what);
+	function useES6() {
+		if(y['.useES6']) {
+			return true;
 		}
 
-		return function() {
-			factory.call(this);
-			transfer(y['public'].constructor, y['.constructor']);
-		};
-	}
-
-	function es6() {
-		if('es6' in use) {
-			return 'es6';
-		}
-		
 		if('function'===typeof base){
 			var f=Object.getOwnPropertyDescriptor;
 
 			if((Object===base)||(f(base, 'prototype')['writable'])){
-				return 'es5';
+				return false;
 			}
 
-			return (use['es6']='es6');
+			return (y['.useES6']=true);
 		}
 	}
 };
+
+Function.extend['.useRegular']=false;
