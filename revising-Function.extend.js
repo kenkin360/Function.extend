@@ -1,4 +1,3 @@
-
 Function.extend=function(base, $factory) {
 	factory.call(initializeClass);
 	updateStaticMembersOfDerivedInnerClasses(y['public'].constructor);
@@ -97,29 +96,30 @@ Function.extend=function(base, $factory) {
 		}		
 		
 		return function() {
+			var args=arguments;
 			var $this=Object.create(y['private']);
-			extended.apply($this, arguments);
-			var args=$this['.arguments'];
-			base.apply(this, arguments);
-			initializeInstance.apply(this, arguments);
+			extended.apply($this, args);
+			args=$this['.arguments'];
+			base.apply(this, args);
+			initializeInstance.apply(this, args);
 			
 			if('function'===typeof $this['.after']) {
-				$this['.after'].apply(this, arguments);
+				$this['.after'].apply(this, args);
 			}
 		};
 	}
 
 	function createClass(extended) {
 		return class extends base {
-			constructor(...params) {
+			constructor(...args) {
 				var $this=Object.create(y['private']);
-				extended.apply($this, ...params);
-				var args=$this['.arguments'];
+				extended.apply($this, args);
+				args=$this['.arguments'];
 				super(...args);
 				initializeInstance.apply(this, args);
 
 				if('function'===typeof $this['.after']) {
-					$this['.after'].apply(this, arguments);
+					$this['.after'].apply(this, args);
 				}
 			}
 		};
