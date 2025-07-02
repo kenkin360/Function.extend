@@ -8,18 +8,23 @@ I was looking for a better way to write JavaScript as if it were a class-based l
 # Getting Started
 The following is a comprehensive example including nested and derived class declaration:
 ```js
-'use strict';
+'use strict;'
+Function.extend['.useRegular']=true;
 
 var BaseClass=Function.extend(Object, function () {
 	var _=this(BaseClass);
+	BaseClass=_[BaseClass];
 
-	var NestedClass=Function.extend(_[BaseClass], function () {
+	var NestedClass=Function.extend(BaseClass, function () {
 		var _=this(NestedClass);
+		NestedClass=_[NestedClass];
 
 		function NestedClass(x, y, z) {
-			_['base'].apply(this, arguments);
-			_(this).Y=y;
+			_['base'].call(this, x, y, z)(function() {
 			_(this).Z=z;
+			_(this).Y=y;
+			_(this).X=x;
+			});
 		}
 
 		_['public'].SetX=function (x) {
@@ -46,8 +51,9 @@ var BaseClass=Function.extend(Object, function () {
 	});
 
 	function BaseClass(x) {
-		_['base'].apply(this, arguments);
+		_['base'].apply(this, arguments)(function() {
 		_(this).X=x;
+		});
 	}
 
 	_['protected'].InternalSetX=function (x) {
@@ -66,9 +72,10 @@ var BaseClass=Function.extend(Object, function () {
 
 var DerivedClass=Function.extend(BaseClass, function () {
 	var _=this(DerivedClass);
+	DerivedClass=_[DerivedClass];
 
 	function DerivedClass(x, y, z) {
-		_['base'].apply(this, arguments);
+		_['base'].apply(this, arguments);//(function() {});
 	}
 });
 
@@ -87,20 +94,56 @@ console.log('o.GetZ() →', o.GetZ());
 # Requirements
 
 1. **Each class must have a constructor declaration that matches the name of the class.**  
-   *(Related — C# Language Specification, §10.11.2, §10.11.4)*  
+
    In Function.extend.js, the constructor must be explicitly declared using the `function` keyword.
 
-3. **Each constructor must invoke its base constructor.**  
-   *(Related — C# Language Specification, §10.11.4)*  
+2. **Each constructor must invoke its base constructor before before using `this`**  
+
    In Function.extend.js, this is typically done via `_['base'].apply(this, arguments)`, or using `.call(...)` for custom arguments.
 
-4. **Class member methods must be declared using `function () {}` syntax rather than arrow functions.**  
+3. **Class member methods must be declared using `function () {}` syntax rather than arrow functions.**  
+
    Arrow functions capture the surrounding lexical `this` and cannot access the `_` context correctly.  
    This will break access to `private` and `protected` scopes, and may lead to unexpected behavior.
 
-5. **A variable named `_` must be declared and initialized as `this(ConstructorName)` at the beginning of the class body.**
+4. **`_` must be declared and initialized as `this(ClassName)` at the beginning of the class body.**
 
-6. **Wrap the base class constructor in _[XXXXX] when declaring a nested class to ensure correct inheritance.**
+5. **When inheriting from a `class`, `_[ClassName]` must be assigned back to `ClassName` and `_['base']` must be invoked with the rest of the constructor logic passed as a function.**
+
+   For inheritance from a `function`, this rule is optional and takes effect only if `Function.extend['.useRegular']` is set to `true` (default is `false`).
+
+The following is a minimal example that satisfies all of the above requirements:
+
+```js
+var MyClass=Function.extend(Object, function () {
+	var _=this(MyClass);
+	MyClass=_[MyClass];
+
+	function MyClass(x) {
+		_['base'].call(this, x)(function () {
+			_(this).X=x;
+		});
+	}
+
+	_['private'].X=0;
+});
+
+```
+
+While `Function.extend['.useRegular']` is not set, the legacy style remains supported:
+
+```js
+var MyClass=Function.extend(Object, function () {
+	var _=this(MyClass);
+
+	function MyClass(x) {
+		_['base'].call(this, x);
+		_(this).X=x;
+	}
+
+	_['private'].X=0;
+});
+```
 
 # Limitations
 
