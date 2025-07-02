@@ -21,9 +21,7 @@ var BaseClass=Function.extend(Object, function () {
 
 		function NestedClass(x, y, z) {
 			_['base'].call(this, x, y, z)(function() {
-			_(this).Z=z;
 			_(this).Y=y;
-			_(this).X=x;
 			});
 		}
 
