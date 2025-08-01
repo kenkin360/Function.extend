@@ -130,7 +130,7 @@ Function.extend=function(base, factory) {
 			try {
 				return target[key];
 			}
-			catch {
+			catch(err) {
 				return instance[key];
 			}
 		}});		

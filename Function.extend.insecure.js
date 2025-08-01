@@ -110,19 +110,19 @@ Function.extend=function(base, factory) {
 	}
 
 	function createClass(extended) {
-		return new Function('base', 'initializeInstance', 'y', 'extended', `return class extends base {
-			constructor(...args) {
-				var $this = Object.create(y['private']);
-				extended.apply($this, args);
-				args = $this['.arguments'];
-				super(...args);
-				initializeInstance.apply(this, args);
-
-				if (typeof $this['.after'] === 'function') {
-					$this['.after'].apply(this, args);
-				}
-			}
-		};`)(base, initializeInstance, y, extended);
+		return new Function('base', 'initializeInstance', 'y', 'extended', "return class extends base {\
+			constructor(...args) {\
+				var $this = Object.create(y['private']);\
+				extended.apply($this, args);\
+				args = $this['.arguments'];\
+				super(...args);\
+				initializeInstance.apply(this, args);\
+\
+				if (typeof $this['.after'] === 'function') {\
+					$this['.after'].apply(this, args);\
+				}\
+			}\
+		};")(base, initializeInstance, y, extended);
 	}
 
 	function createProxy(instance) {		
@@ -130,7 +130,7 @@ Function.extend=function(base, factory) {
 			try {
 				return target[key];
 			}
-			catch {
+			catch(err) {
 				return instance[key];
 			}
 		}});		
