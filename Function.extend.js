@@ -100,8 +100,8 @@ Function.extend=function(base, factory) {
 			var $this=Object.create(y['private']);
 			extended.apply($this, args);
 			args=$this['.arguments'];
-			base.apply(this, args);
 			initializeInstance.apply(this, args);
+			base.apply(this, args);
 			
 			if('function'===typeof $this['.after']) {
 				$this['.after'].apply(this, args);
@@ -146,8 +146,8 @@ Function.extend=function(base, factory) {
 			};
 		}
 		
-		base.apply(this, arguments);
 		initializeInstance.apply(this, arguments);
+		base.apply(this, arguments);
 	}
 	
 	function useES6() {
