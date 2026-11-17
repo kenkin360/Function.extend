@@ -80,7 +80,7 @@ Function.extend=function(base, factory) {
 			}
 		};
 
-		derived.prototype=y['public'];
+		if(!useES6()) { derived.prototype=y['public']; }
 		return y;
 	}
 
