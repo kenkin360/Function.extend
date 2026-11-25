@@ -158,9 +158,9 @@ JavaScript does not support method overloading, as function signatures do not in
 
 Overriding, however, is a natural behavior of the language: later declarations with the same name will replace earlier ones. 
 
-In Function.extend.js, this override behavior applies within the same access level (e.g., `public`, `protected`, or `private`). 
-To simulate `base.method(...)` calls, a common pattern is to preserve the original method in another access level before overriding it. 
-For example:
+Within a class, assigning a member again at the same access level replaces its previous value. Across classes, public methods can be overridden through JavaScript's prototype chain; virtual dispatch to derived-class protected overrides is not supported. Private members cannot be overridden by derived classes.
+
+To simulate `base.method(...)` calls, a common pattern is to preserve the original method under another member name before replacing it. For example:
 
 ```js
 _['private'].InternalOnMouseWheel = _['public'].OnMouseWheel;
